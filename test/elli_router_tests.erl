@@ -1,9 +1,8 @@
 -module(elli_router_tests).
 -include_lib("eunit/include/eunit.hrl").
--include("elli.hrl").
 
 
-elli_test_() ->
+elli_router_test_() ->
     {setup,
      fun setup/0, fun teardown/1,
      [
