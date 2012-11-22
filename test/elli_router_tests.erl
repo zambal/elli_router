@@ -8,6 +8,7 @@ elli_router_test_() ->
      [
       ?_test(number_op()),
       ?_test(list_op()),
+      ?_test(cars()),
       ?_test(forbidden())
      ]}.
 
@@ -25,6 +26,11 @@ list_op() ->
     URL = "http://localhost:3003/list/reverse/a,b,c,d",
     {ok, Response} = httpc:request(URL),
     ?assertEqual("dcba", body(Response)).
+
+cars() ->
+    URL = "http://localhost:3003/cars/1968/corvette/black",
+    {ok, Response} = httpc:request(URL),
+    ?assertEqual("An old black corvette", body(Response)).
 
 forbidden() ->
     URL = "http://localhost:3003/hello",

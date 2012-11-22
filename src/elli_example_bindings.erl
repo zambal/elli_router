@@ -1,10 +1,26 @@
 -module(elli_example_bindings).
 -export([handle/3]).
 
-handle(_Req, Bindings, _Args) ->
-    Class = proplists:get_value(class, Bindings),
-    Op = proplists:get_value(op, Bindings),
-    handle_op(Class, Op, proplists:get_value(Class, Bindings)).
+handle(Req, Bindings, _Args) ->
+    case elli_request:path(Req) of
+        [<<"cars">>|_] ->
+            cars(proplists:get_value(year, Bindings),
+                 proplists:get_value(model, Bindings),
+                 proplists:get_value(color, Bindings));
+        _ ->
+            Class = proplists:get_value(class, Bindings),
+            Op = proplists:get_value(op, Bindings),
+            handle_op(Class, Op, proplists:get_value(Class, Bindings))
+    end.
+
+cars(Year, Model, Color) ->
+    Prefix = if Year < 2000  -> <<"An old ">>;
+                Year < 2009  -> <<"A slightly old ">>;
+                Year < 2012  -> <<"A new ">>;
+                Year >= 2012 -> <<"A brand new ">>
+             end,
+    {ok, [], [Prefix, Color, <<" ">>, Model]}.
+
 
 handle_op(number, Op, N) -> 
     {ok, [], [integer_to_list(number_op(Op, N))]};

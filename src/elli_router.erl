@@ -22,7 +22,8 @@
 %% - preprocess(Req, Args) -> NewReq | {NewReq, Response} | {nopost, Response}.
 %%
 %% - handlers(Args) -> [{[<<"hello">>, '*'], elli_example_middleware, []},
-%%                      {<<"^/(send|receive)file/.*$">>, elli_example_callback, []}].
+%%                      {<<"^/(send|receive)file/.*$">>, elli_example_callback, []},
+%%                      {[<<"cars">>, {year, integer}, model, color], elli_example_bindings, []}].
 %%
 %% postprocess(Req, Response, Args) -> NewResponse.
 %%

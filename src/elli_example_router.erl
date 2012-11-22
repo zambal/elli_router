@@ -8,14 +8,16 @@
 
 preprocess(Req, _Config) ->
     case elli_request:path(Req) of
-        [P|_] when P =:= <<"number">>;
+        [P|_] when P =:= <<"cars">>; 
+                   P =:= <<"number">>;
                    P =:= <<"list">> -> Req;
         _ -> {nopost, {403, [], "Forbidden"}}
     end.
             
 handlers(_Config) ->
     [{[{class, atom}, {op, atom}, {number, integer}], elli_example_bindings, []},
-     {[{class, atom}, {op, atom}, {list, list}], elli_example_bindings, []}].
+     {[{class, atom}, {op, atom}, {list, list}], elli_example_bindings, []},
+     {[<<"cars">>, {year, integer}, model, color], elli_example_bindings, []}].
 
 postprocess(_Req, Response, _Config) -> Response.
 
