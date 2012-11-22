@@ -91,8 +91,8 @@ postprocess(Req, Resp, {M, Args}) ->
         false -> Resp
     end.
 
-dispatch(Req, [{Route, M, Args}|Rs]) ->
-    case match(Req, Route) of
+dispatch(Req, [{Rule, M, Args}|Rs]) ->
+    case match(Req, Rule) of
         {true, Bindings} ->
             set_dispatch_handler({M, Args}),
             case erlang:function_exported(M, handle, 3) of
@@ -122,7 +122,7 @@ dispatch_event(Event, EventArgs) ->
 %%
 
 mods(Callback) -> 
-    [{M, Args} || {_Route, M, Args} <- handlers(Callback)].   
+    [{M, Args} || {_Rule, M, Args} <- handlers(Callback)].   
 
 get_dispatch_handler(Event)
   when Event == request_complete;
@@ -131,13 +131,13 @@ get_dispatch_handler(_Event)   -> get(elli_dispatch_handler).
 
 set_dispatch_handler(Mod) -> put(elli_handler, Mod).
 
-match(Req, Route) ->
-    case is_list(Route) of
-        true  -> match_pat(elli_request:path(Req), Route);
-        false -> match_regex(elli_request:raw_path(Req), Route)
+match(Req, Rule) ->
+    case is_list(Rule) of
+        true  -> match_pat(elli_request:path(Req), Rule);
+        false -> match_regex(elli_request:raw_path(Req), Rule)
     end.
 
-match_pat(Path, Route) -> match_pat(Path, Route, []).
+match_pat(Path, Rule) -> match_pat(Path, Rule, []).
 
 match_pat([PT|PTs], [RT|RTs], Bind) when PT == RT ->
     match_pat(PTs, RTs, Bind);
@@ -167,8 +167,8 @@ match_pat([PT|PTs], [{Key, Type}|RTs], Bind) ->
 match_pat([], [], Bind) -> {true, lists:reverse(Bind)};
 match_pat(_, _, _Bind)  -> false.
 
-match_regex(Path, Route) ->
-    case re:run(Path, Route, [{capture, none}]) of
+match_regex(Path, Rule) ->
+    case re:run(Path, Rule, [{capture, none}]) of
         match   -> {true, []};
         nomatch -> false
     end.
