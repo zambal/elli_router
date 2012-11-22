@@ -130,7 +130,7 @@ get_dispatch_handler(Event)
        Event == chunk_complete -> erase(elli_dispatch_handler);
 get_dispatch_handler(_Event)   -> get(elli_dispatch_handler). 
 
-set_dispatch_handler(Mod) -> put(elli_handler, Mod).
+set_dispatch_handler(Mod) -> put(elli_dispatch_handler, Mod).
 
 match(Req, Rule) ->
     case is_list(Rule) of
