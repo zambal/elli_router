@@ -132,11 +132,10 @@ get_dispatch_handler(_Event)   -> get(elli_dispatch_handler).
 
 set_dispatch_handler(Mod) -> put(elli_dispatch_handler, Mod).
 
-match(Req, Rule) ->
-    case is_list(Rule) of
-        true  -> match_pat(elli_request:path(Req), Rule);
-        false -> match_regex(elli_request:raw_path(Req), Rule)
-    end.
+match(Req, Rule) when is_list(Rule) ->
+    match_pat(elli_request:path(Req), Rule);
+match(Req, Rule) when is_binary(Rule) ->
+    match_regex(elli_request:raw_path(Req), Rule).
 
 match_pat(Path, Rule) -> match_pat(Path, Rule, []).
 
